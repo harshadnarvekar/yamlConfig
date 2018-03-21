@@ -7,7 +7,7 @@
   pipelines:
     "Web-Build": # definition of yaml-example pipeline
       group: Web
-      label_template: "${mygit[:8]}"
+      label_template: "baba"
       locking: off
       materials:
         mygit: # this is the name of material
@@ -17,7 +17,7 @@
         upstream:
           # type is optional here, material type is implied based on presence of pipeline and stage fields
           # type: dependency
-          pipeline: Web Build
+          pipeline: Web-Build
           stage: BuildArchive
       stages: # list of stages in order
         - BuildArchive: # name of stage
@@ -86,7 +86,7 @@
                      arguments:
                       - "-c
                         aws --region ${REGION} --profile ${PROFILE} s3 cp RELEASE.txt s3://test-tabcorp-beta-archive/"     
-        - <Build></Build>DeployToCI: # name of stage
+        - BuildDeployToCI: # name of stage
             clean_workspace: true
             jobs:
               Deploy: # name of the job
