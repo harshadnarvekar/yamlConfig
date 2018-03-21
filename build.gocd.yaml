@@ -17,8 +17,8 @@ pipelines: # tells plugin that here are pipelines by name
         branch: ci
       upstream:
         # type is optional here, material type is implied based on pipeline and stage fields
-        type: dependency
-        pipeline: pipe2
+        # type: dependency
+        # pipeline: pipe2
     stages:
       - build: # name of stage
           clean_workspace: true
