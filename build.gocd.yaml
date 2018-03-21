@@ -3,7 +3,7 @@
       environment_variables:
         EXAMPLE_DEPLOYMENT: testing
       pipelines:
-        - Web
+        - Web-Build
   pipelines:
     "Web-Build": # definition of yaml-example pipeline
       group: Web
