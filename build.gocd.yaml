@@ -44,7 +44,7 @@ pipelines: # tells plugin that here are pipelines by name
               environment_variables:
                 MONO_PATH: /usr/bin/local/mono
               secure_variables:
-                PASSWORD: "s&Du#@$xsSa"
+                PASSWORD: 
               properties:
                 perf:
                   source: test.xml
