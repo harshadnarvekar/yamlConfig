@@ -6,9 +6,6 @@ environments:
       DEPLOYMENT: testing
     secure_variables:
       ENV_PASSWORD: 
-    pipelines:
-      - example-deploy-testing
-      - build-testing
 pipelines:
   mypipe1: # definition of mypipe1 pipeline
     group: mygroup # note that the group name can contain only of alphanumeric & underscore characters
@@ -28,13 +25,6 @@ pipelines:
             csharp: # name of the job
               resources:
                - net45
-              artifacts:
-               - build:
-                   source: bin/
-                   destination: build
-               - test:
-                   source: tests/
-                   destination: test-reports/
               tabs:
                 report: test-reports/index.html
               tasks: # ordered list of tasks to execute in job csharp
