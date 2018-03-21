@@ -5,20 +5,7 @@
       pipelines:
         - Web
   pipelines:
-    yamlpipe1:
-      group: simple
-      materials:
-        mygit:  # this is the name of material
-          # says about type of material and url at once
-          git: http://my.example.org/mygit.git
-      stages:
-        - build: # name of stage
-            jobs:
-              build: # name of the job
-                tasks:
-                 - exec: # indicates type of task
-                     command: make
-    "yaml-example": # definition of yaml-example pipeline
+    "Web-Build": # definition of yaml-example pipeline
       group: Web
       label_template: "${mygit[:8]}"
       locking: off
@@ -99,7 +86,7 @@
                      arguments:
                       - "-c
                         aws --region ${REGION} --profile ${PROFILE} s3 cp RELEASE.txt s3://test-tabcorp-beta-archive/"     
-  - Build DeployToCI: # name of stage
+        - Build DeployToCI: # name of stage
             clean_workspace: true
             jobs:
               Deploy: # name of the job
