@@ -15,10 +15,10 @@ pipelines: # tells plugin that here are pipelines by name
         # says about type of material and url at once
         git: http://my.example.org/mygit.git
         branch: ci
-      upstream:
-        # type is optional here, material type is implied based on pipeline and stage fields
-        # type: dependency
-        # pipeline: pipe2
+      # upstream:
+      #   # type is optional here, material type is implied based on pipeline and stage fields
+      #   # type: dependency
+      #   # pipeline: pipe2
     stages:
       - build: # name of stage
           clean_workspace: true
