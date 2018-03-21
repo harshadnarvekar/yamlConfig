@@ -1,36 +1,116 @@
-#ci.gocd.yaml
-format_version: 2
-environments:
-  testing:
-    environment_variables:
-      DEPLOYMENT: testing
-    secure_variables:
-      ENV_PASSWORD: 
-pipelines:
-  mypipe1: # definition of mypipe1 pipeline
-    group: mygroup # note that the group name can contain only of alphanumeric & underscore characters
+# rich.gocd.yaml
+pipelines: # tells plugin that here are pipelines by name
+  pipe2:
+    group: rich
     label_template: "${mygit[:8]}"
-    lock_behavior: none
-    parameters: # list of parameters that can be configured for a pipeline
-      param1: value1
+    locking: on
+    tracking_tool:
+      link: "http://your-trackingtool/yourproject/${ID}"
+      regex: "evo-(\\d+)"
+    timer:
+      spec: "0 0 22 ? * MON-FRI"
+      only_on_changes: true
     materials:
-      mygit: # this is the name of material, the name can contain only of alphanumeric & underscore characters
-        # keyword git says about type of material and url at once
-        git: http://my.example.org/mygit.git
+      mygit: # this is the name of material
+        # says about type of material and url at once
+        git: https://github.com/harshadnarvekar/myapp1.git
         branch: ci
-    stages: # list of stages in order
+      # upstream:
+      #   # type is optional here, material type is implied based on pipeline and stage fields
+      #   # type: dependency
+      #   # pipeline: pipe2
+    stages:
       - build: # name of stage
           clean_workspace: true
+          approval:
+            type: manual
           jobs:
             csharp: # name of the job
+              run_instances: 3
               resources:
                - net45
-              tabs:
-                report: test-reports/index.html
-              tasks: # ordered list of tasks to execute in job csharp
+              artifacts:
+               - build:
+                   source: bin/
+                   destination: build
+              environment_variables:
+                MONO_PATH: /usr/bin/local/mono
+              secure_variables:
+                PASSWORD: 
+              properties:
+                perf:
+                  source: test.xml
+                  xpath: "substring-before(//report/data/all/coverage[starts-with(@type,\u0027class\u0027)]/@value, \u0027%\u0027)"
+              tasks:
                - exec: # indicates type of task
                    command: make
                    arguments:
                     - "VERBOSE=true"
-               # shorthand for script-executor plugin
-               - script: ./build.sh ci
+              # shorthand for script-executor plugin
+               # - script: ./build.sh c
+      - BuildArchive: # name of stage
+          clean_workspace: true
+          environment_variables:
+            REGION: "ap-southeast-2"
+            PROFILE: "test" 
+            ARCHIVE_BUCKET: "test-tabcorp-web-archive"                        
+          jobs:
+            Archive: # name of the job
+              resources:
+               -  # resource 
+              artifacts:
+               - build:
+                   source: target/*.tar.gz
+                   destination: artifacts
+               - build:
+                   source: target/RELEASE.txt
+                   destination: artifacts
+               - build:
+                   source: target/PACKAGE.txt
+                   destination: artifacts                   
+              tasks: # ordered list of tasks to execute in job csharp
+               - exec: # indicates type of task
+                   working_directory: 
+                   command: make
+                   arguments:
+                    - "clean"
+               - exec: # indicates type of task
+                   working_directory: 
+                   command: make
+                   arguments:
+                    - "archive"
+               - exec: # indicates type of task
+                   working_directory: 
+                   command: make
+                   arguments:
+                    - "publish"
+               - exec: # indicates type of task
+                   working_directory: target
+                   command: /bin/bash
+                   arguments:
+                    - "-c
+                        aws --region ${REGION} --profile ${PROFILE} s3 cp ${APPLICATION}-*.tar.gz s3://${ARCHIVE_BUCKET}/"
+               - exec: # indicates type of task
+                   working_directory: target
+                   command: /bin/bash
+                   arguments:
+                    - "-c
+                      aws --region ${REGION} --profile ${PROFILE} s3 cp RELEASE.txt s3://${ARCHIVE_BUCKET}/"
+               - exec: # indicates type of task
+                   working_directory: target
+                   command: /bin/bash
+                   arguments:
+                    - "-c
+                      aws --region ${REGION} --profile ${PROFILE} s3 cp PACKAGE.txt s3://${ARCHIVE_BUCKET}/"                                                          
+               - exec: # indicates type of task
+                   working_directory: target
+                   command: /bin/bash
+                   arguments:
+                    - "-c
+                      aws --region ${REGION} --profile ${PROFILE} s3 cp ${APPLICATION}-*.tar.gz s3://test-tabcorp-beta-archive/"
+               - exec: # indicates type of task
+                   working_directory: target
+                   command: /bin/bash
+                   arguments:
+                    - "-c
+                      aws --region ${REGION} --profile ${PROFILE} s3 cp RELEASE.txt s3://test-tabcorp-beta-archive/" 
