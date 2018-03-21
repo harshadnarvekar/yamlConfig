@@ -7,18 +7,18 @@
   pipelines:
     "Web-Build": # definition of yaml-example pipeline
       group: Web
-      label_template: "baba"
+      label_template: "${mygit[:8]}"
       locking: off
       materials:
         mygit: # this is the name of material
           # keyword git says about type of material and url at once
           git: https://github.com/harshadnarvekar/myapp1
           branch: ci
-        upstream:
+        # upstream:
           # type is optional here, material type is implied based on presence of pipeline and stage fields
           # type: dependency
-          pipeline: Web-Build
-          stage: BuildArchive
+          # pipeline: Web-Build
+          # stage: BuildArchive
       stages: # list of stages in order
         - BuildArchive: # name of stage
             clean_workspace: true
