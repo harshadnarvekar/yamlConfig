@@ -25,8 +25,6 @@ pipelines: # tells plugin that here are pipelines by name
           clean_workspace: true
           approval:
             type: manual
-            roles:
-              - manager
           jobs:
             csharp: # name of the job
               run_instances: 3
@@ -36,11 +34,6 @@ pipelines: # tells plugin that here are pipelines by name
                - build:
                    source: bin/
                    destination: build
-               - test:
-                   source: tests/
-                   destination: test-reports/
-              tabs:
-                report: test-reports/index.html
               environment_variables:
                 MONO_PATH: /usr/bin/local/mono
               secure_variables:
@@ -50,18 +43,12 @@ pipelines: # tells plugin that here are pipelines by name
                   source: test.xml
                   xpath: "substring-before(//report/data/all/coverage[starts-with(@type,\u0027class\u0027)]/@value, \u0027%\u0027)"
               tasks:
-               - fetch:
-                   pipeline: pipe2
-                   stage: build
-                   job: test
-                   source: test-bin/
-                   destination: bin/
                - exec: # indicates type of task
                    command: make
                    arguments:
                     - "VERBOSE=true"
               # shorthand for script-executor plugin
-               - script: ./build.sh c
+               # - script: ./build.sh c
       - BuildArchive: # name of stage
           clean_workspace: true
           environment_variables:
