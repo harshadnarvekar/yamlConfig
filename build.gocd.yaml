@@ -12,7 +12,7 @@
       materials:
         mygit: # this is the name of material
           # keyword git says about type of material and url at once
-          git: http://my.example.org/mygit.git
+          git: https://github.com/harshadnarvekar/myapp1
           branch: ci
         upstream:
           # type is optional here, material type is implied based on presence of pipeline and stage fields
@@ -20,7 +20,7 @@
           pipeline: Web Build
           stage: BuildArchive
       stages: # list of stages in order
-        - Build Archive: # name of stage
+        - BuildArchive: # name of stage
             clean_workspace: true
             environment_variables:
               REGION: "ap-southeast-2"
@@ -86,7 +86,7 @@
                      arguments:
                       - "-c
                         aws --region ${REGION} --profile ${PROFILE} s3 cp RELEASE.txt s3://test-tabcorp-beta-archive/"     
-        - Build DeployToCI: # name of stage
+        - <Build></Build>DeployToCI: # name of stage
             clean_workspace: true
             jobs:
               Deploy: # name of the job
