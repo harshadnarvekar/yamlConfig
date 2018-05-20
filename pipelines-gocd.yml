@@ -61,7 +61,7 @@ environments:
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # service-multiplier-yarra.yml
-pipe2:
+pipe1:
   group: group1
   environment_variables:
     DEPLOYMENT: testing
@@ -95,7 +95,7 @@ pipe2:
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # service-multiplier-yarra.yml
-pipe2:
+pipe3:
   group: group1
   environment_variables:
     DEPLOYMENT: testing
@@ -113,16 +113,8 @@ pipe2:
 
 # rich.gocd.yaml
 pipelines: # tells plugin that here are pipelines by name
-  Web-Build:
+  Web-Build-New:
     group: Web
-    label_template: "${mygit[:8]}"
-    locking: on
-    tracking_tool:
-      link: "http://your-trackingtool/yourproject/${ID}"
-      regex: "evo-(\\d+)"
-    timer:
-      spec: "0 0 22 ? * MON-FRI"
-      only_on_changes: true
     materials:
       mygit: # this is the name of material
         # says about type of material and url at once
